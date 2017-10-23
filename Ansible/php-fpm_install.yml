@@ -1,0 +1,39 @@
+---
+- hosts: all
+  become: true
+  tasks:
+     - name: Install repo epel-release
+       yum:
+         name: epel-release
+         state: latest
+
+     - name: Install ius repo
+       yum_repository:
+         name: IUS
+         description: Community Packages for Enterprise Linux 7 - $basearch
+         baseurl: https://dl.iuscommunity.org/pub/ius/stable/CentOS/7/$basearch
+         mirrorlist: https://mirrors.iuscommunity.org/mirrorlist?repo=ius-centos7&arch=$basearch&protocol=http
+         failovermethod: priority
+         enabled: yes
+         gpgcheck: yes
+         gpgkey: https://dl.iuscommunity.org/pub/ius/IUS-COMMUNITY-GPG-KEY
+     
+     - name: Install php 5.6
+       yum:
+         name: php56u
+         state: latest
+     
+     - name: Install php-fpm version 5.6
+       yum:
+         name: php56u-fpm
+         state: latest
+  handlers:
+     - name: Start php-fpm service
+       service:
+         name: php-fpm
+         state: restarted
+         
+     - name: Enable php-fpm service
+       service:
+         name: php-fpm
+         enabled: yes

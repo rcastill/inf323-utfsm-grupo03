@@ -1,0 +1,64 @@
+---
+- hosts: all
+  become: true
+  tasks:
+     - name: Ensure php56u-fpm cgi.fix_pathinfo=0
+       lineinfile: 
+         path: /etc/php.ini 
+         regexp: '^(.*)cgi.fix_pathinfo=' 
+         line: 'cgi.fix_pathinfo=0'
+     
+     - name: Ensure php56u-fpm listen = 127.0.0.1:9000
+       lineinfile: 
+         path: /etc/php-fpm.d/www.conf 
+         regexp: '^(.*)listen=' 
+         line: 'listen=127.0.0.1:9000'
+     
+     - name: Ensure php56u-fpm listen.owner = nobody
+       lineinfile: 
+         path: /etc/php-fpm.d/www.conf 
+         regexp: '^(.*)listen.owner=' 
+         line: 'listen.owner=nobody'
+
+     - name: Ensure php56u-fpm listen.group = nobody
+       lineinfile: 
+         path: /etc/php-fpm.d/www.conf 
+         regexp: '^(.*)listen.group=' 
+         line: 'listen.group=nobody'
+
+     - name: Ensure php56u-fpm user = grupo03;nginx
+       lineinfile: 
+         path: /etc/php-fpm.d/www.conf
+         regexp: '^(.*)user='
+         line: 'user=grupo03;nginx'
+
+     - name: Ensure php56u-fpm group = grupo03;nginx
+       lineinfile: 
+         path: /etc/php-fpm.d/www.conf 
+         regexp: '^(.*)group=' 
+         line: 'group=grupo03;nginx'
+       
+     - name: Ensure the server_name is the correct
+       lineinfile:
+         path: /etc/nginx/conf.d/default.conf
+         regexp: '^(.*)server_name'
+         line: 'server_name     grupo03.mosorio.me;'
+     
+     - name: Ensure the index is index.php
+       lineinfile:
+         path: /etc/nginx/conf.d/default.conf
+         regexp: '^(.*)index'
+         line: 'index   index.php;'
+       notify:
+         - restart php-fpm
+         - restart nginx
+  handlers:
+     - name: restart php-fpm
+       service:
+         name: php-fpm
+         state: restarted
+
+     - name: restart nginx
+       service:
+         name: nginx
+         state: restarted
