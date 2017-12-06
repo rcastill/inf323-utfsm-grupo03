@@ -77,11 +77,10 @@ WSGI_APPLICATION = 'grupo03_site.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'grupo03_db',   # TODO: Definir nombre de la database
-        'USER': 'grupo03',   # TODO: Definir usuario que hara uso de la database
-        'PASSWORD': '03grup0!',   # TODO: Definir pass del dicho usuario
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'HOST': 'db',
+        'PORT': 5432,
     }
 }
 
