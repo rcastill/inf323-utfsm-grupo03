@@ -7,7 +7,7 @@ services:
       POSTGRES_USER: grupo03
       POSTGRES_PASSWORD: 03grup0!
     restart: always
-    image: postgres:9.6
+    image: postgres
     expose:
       - "5432"
   redis:
@@ -28,3 +28,5 @@ services:
       - redis:redis
     ports:
       - "8000:8000"
+    depends_on:
+      - db
